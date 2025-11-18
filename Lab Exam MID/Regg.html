@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Event Registration</title>
+</head>
+<body>
+
+<h2>Event Registration Form</h2>
+
+<form id="registrationForm">
+    <label for="fullName">Full Name (Required):</label><br>
+    <input type="text" id="fullName" name="fullName"><br>
+    <span id="nameError" style="color:red;"></span><br>
+
+    <label for="email">Professional Email (Required):</label><br>
+    <input type="text" id="email" name="email"><br>
+    <span id="emailError" style="color:red;"></span><br>
+
+    <label for="company">Company/Institution (Optional):</label><br>
+    <input type="text" id="company" name="company"><br><br>
+
+    <label>Attendance Type (Required):</label><br>
+    <input type="radio" id="virtual" name="attendance" value="Virtual">
+    <label for="virtual">Virtual</label><br>
+    <input type="radio" id="inPerson" name="attendance" value="In-Person">
+    <label for="inPerson">In-Person</label><br>
+    <span id="attendanceError" style="color:red;"></span><br>
+
+    <button type="button" onclick="submitForm()">Register</button>
+</form>
+
+<h3>Event Statistics</h3>
+<p>Total Registrants: <span id="totalRegistrants">0</span></p>
+<p>Virtual: <span id="virtualCount">0</span></p>
+<p>In-Person: <span id="inPersonCount">0</span></p>
+
+<script>
+let registrants = [];
+let virtualCount = 0;
+let inPersonCount = 0;
+
+function validateName(name) {
+    return name.length >= 6 && name.length <= 100;
+}
+
+function validateEmail(email) {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailPattern.test(email);
+}
+
+function submitForm() {
+    document.getElementById('nameError').innerText = '';
+    document.getElementById('emailError').innerText = '';
+    document.getElementById('attendanceError').innerText = '';
+
+    const name = document.getElementById('fullName').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const attendance = document.querySelector('input[name="attendance"]:checked');
+
+    let valid = true;
+
+    if(!validateName(name)) {
+        document.getElementById('nameError').innerText = "Name must be between 6 and 100 characters.";
+        valid = false;
+    }
+
+    if(!validateEmail(email)) {
+        document.getElementById('emailError').innerText = "Please enter a valid professional email address.";
+        valid = false;
+    }
+
+    if(!attendance) {
+        document.getElementById('attendanceError').innerText = "Please select your attendance type.";
+        valid = false;
+    }
+
+    if(!valid) return;
+    registrants.push({name, email, attendance: attendance.value});
+    if(attendance.value === "Virtual") virtualCount++;
+    if(attendance.value === "In-Person") inPersonCount++;
+
+    alert("Registration Successful!");
+
+    
+    document.getElementById('registrationForm').reset();
+    document.getElementById('totalRegistrants').innerText = registrants.length;
+    document.getElementById('virtualCount').innerText = virtualCount;
+    document.getElementById('inPersonCount').innerText = inPersonCount;
+}
+</script>
+
+</body>
+</html>
